@@ -1,0 +1,65 @@
+# Byte-compiled / optimized / cache files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+venv/
+.env/
+.venv/
+env/
+
+# Distribution / packaging
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage
+.coverage
+.coverage.*
+htmlcov/
+.tox/
+.nox/
+.pytest_cache/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# IDE / Editor
+.vscode/
+.idea/
+*.iml
+
+# MacOS
+.DS_Store
+
+# Logs
+*.log
+
+# Environments variables
+.env
+.env.*
+
+# PyCharm
+*.pyc
+*.pyo
+
+# MyPy
+.mypy_cache/
+
+# Ruff / lint cache
+.ruff_cache/
+
+# Local config
+*.local
+
+# Ignore sensitive files
+secrets.json
+config.yml
+
+.idea
