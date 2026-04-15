@@ -20,7 +20,7 @@ async def create_user(username: str, email: str, hashed_password: str) -> dict:
             username=username,
             email=email,
             password=hashed_password,
-            created_at=datetime.datetime.utcnow().isoformat()
+            created_at=datetime.datetime.now(datetime.timezone.utc).isoformat()
         )
         record = await result.single()
         return dict(record["u"].items())

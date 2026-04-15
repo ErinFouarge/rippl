@@ -20,7 +20,7 @@ async def register(data: RegisterRequest):
 
     token = redis_session.create_session(user["id"], user["username"])
 
-    response = JSONResponse({"message": "Connecté", "username": user["username"]})
+    response = JSONResponse({"id": user["id"], "username": user["username"], "email": user["email"]})
     response.set_cookie(
         key="session_token",
         value=token,
