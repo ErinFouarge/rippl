@@ -1,0 +1,52 @@
+@import "tailwindcss";
+
+@theme {
+  --color-rippl: #534AB7;
+  --color-rippl-light: #EEEDFE;
+  --color-rippl-dark: #3C3489;
+
+  --color-rippl-50: #EEEDFE;
+  --color-rippl-600: #534AB7;
+  --color-rippl-800: #3C3489;
+}
+
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: var(--font-sans), system-ui, sans-serif;
+  }
+
+  input::placeholder {
+    color: #a8a29e;
+  }
+}
+
+/* Classes utilitaires personnalisées (Anciennement @layer components) */
+/* En v4, on définit simplement les classes après l'import.
+   L'utilisation de @apply reste valide pour composer tes boutons. */
+
+.rippl-input {
+  @apply w-full px-3 py-2.5 rounded-xl border border-stone-200
+  bg-white text-stone-900 text-sm outline-none
+  transition-all duration-150
+  focus:border-rippl-600 focus:ring-2 focus:ring-rippl-50;
+}
+
+.rippl-btn-primary {
+  @apply w-full py-2.5 rounded-xl bg-rippl-600 text-white text-sm font-medium
+  transition-all duration-150 hover:bg-rippl-800
+  active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed;
+}
+
+.rippl-btn-outline {
+  @apply px-3 py-1.5 rounded-lg border border-rippl-600 text-rippl-600
+  text-xs font-medium transition-all duration-150
+  hover:bg-rippl-50 active:scale-[0.98];
+}
+
+.card {
+  @apply bg-white border border-stone-100 rounded-2xl;
+}
