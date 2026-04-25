@@ -33,3 +33,12 @@ async def get_user_by_email(email: str) -> dict | None:
         )
         record = await result.single()
         return dict(record["u"].items()) if record else None
+
+async def get_user_by_username(username: str) -> dict | None:
+    async with driver.session() as session:
+        result = await session.run(
+            "MATCH (u:User {username: $username}) RETURN u",
+            username=username
+        )
+        record = await result.single()
+        return dict(record["u"].items()) if record else None
