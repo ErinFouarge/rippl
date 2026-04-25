@@ -5,11 +5,12 @@ from db.redis.redis_driver import client
 
 SESSION_TTL = timedelta(hours=24)
 
-def create_session(user_id: str, username: str) -> str:
+def create_session(user_id: str, username: str, email: str) -> str:
     session_token = str(uuid.uuid4())
     session_data = {
-        "user_id": user_id,
+        "id": user_id,
         "username": username,
+        "email": email
     }
     client.setex(
         f"session:{session_token}",

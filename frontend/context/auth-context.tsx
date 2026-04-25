@@ -5,7 +5,7 @@ import {
   useContext,
   useState,
   useCallback,
-  ReactNode,
+  ReactNode, useEffect,
 } from "react";
 import { useRouter } from "next/navigation";
 import { authService } from "@/lib/services/auth.service";
@@ -30,6 +30,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [error, setError] = useState<string | null>(null);
 
   const clearError = useCallback(() => setError(null), []);
+
+  useEffect(() => {
+    const initAuth = async () => {
+      setIsLoading(true);
+      try {
+        const user = await authService.getCurrentUser();
+        setUser(user);
+      } catch {
+        setUser(null);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    initAuth();
+  }, []);
 
   const signIn = useCallback(
     async (data: LoginPayload) => {

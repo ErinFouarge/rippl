@@ -1,9 +1,9 @@
-from fastapi import Cookie, HTTPException, Depends
+from fastapi import Cookie, HTTPException
 from db.redis import session as redis_session
 from fastapi.responses import JSONResponse
 
 def create_auth_response(user: dict) -> JSONResponse:
-    token = redis_session.create_session(user["id"], user["username"])
+    token = redis_session.create_session(user["id"], user["username"], user["email"])
 
     response = JSONResponse({
         "id": user["id"],
@@ -28,4 +28,4 @@ async def get_current_user(session_token: str = Cookie(None)):
     if not user:
         raise HTTPException(status_code=401, detail="Session expirée ou invalide")
 
-    return user["user_id"]
+    return user

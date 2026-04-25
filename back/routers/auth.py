@@ -1,11 +1,11 @@
 from starlette.responses import JSONResponse
 from db.redis import session as redis_session
-from fastapi import HTTPException, Cookie
+from fastapi import HTTPException, Cookie, Depends
 from dto.request.login import LoginRequest
 from dto.request.register import RegisterRequest
 from fastapi import APIRouter
 from services.auth import register_user, login_user
-from utils.session import create_auth_response
+from utils.session import create_auth_response, get_current_user
 
 router = APIRouter()
 
@@ -26,6 +26,11 @@ async def login(data: LoginRequest):
         raise HTTPException(status_code=401, detail=str(e))
 
     return create_auth_response(user)
+
+@router.get("/me")
+async def me(user: dict = Depends(get_current_user)):
+    return user
+
 
 @router.post("/logout")
 def logout(session_token: str = Cookie(None)):
