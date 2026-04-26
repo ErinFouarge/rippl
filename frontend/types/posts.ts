@@ -5,6 +5,7 @@ export type Post = {
 	content: string;
 	likes: number;
 	is_liked?: boolean;
+	is_followed?: boolean;
 	comments?: Comment[];
 };
 

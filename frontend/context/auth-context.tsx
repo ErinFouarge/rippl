@@ -10,6 +10,7 @@ import {
 import { useRouter } from "next/navigation";
 import { authService } from "@/lib/services/auth.service";
 import type { LoginPayload, RegisterPayload, User } from "@/types";
+import { useQueryClient } from "@tanstack/react-query";
 
 type AuthContextValue = {
   user: User | null;
@@ -25,6 +26,7 @@ const AuthContext = createContext<AuthContextValue | null>(null);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const router = useRouter();
+  const queryClient = useQueryClient();
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -90,8 +92,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const signOut = useCallback(async () => {
     await authService.logout();
     setUser(null);
+    queryClient.invalidateQueries({ queryKey: ['posts'] });
     router.push("/login");
-  }, [router]);
+  }, [queryClient, router]);
 
   return (
     <AuthContext.Provider

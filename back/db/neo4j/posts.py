@@ -46,13 +46,15 @@ async def get_posts_excluding_user(user_id: str) -> list[dict]:
             MATCH (author:User)-[:POSTED]->(p:Post)
             WHERE author.id <> $user_id
             
-            OPTIONAL MATCH (me:User {id: $user_id})-[r:LIKED]->(p)
-            WITH p, author, r
+            MATCH (me:User {id: $user_id})
+            
+            OPTIONAL MATCH (me)-[r:LIKED]->(p)
+            OPTIONAL MATCH (me)-[f:FOLLOWS]->(author)
             
             OPTIONAL MATCH (p)<-[l:LIKED]-(:User)
             OPTIONAL MATCH (commenter:User)-[:COMMENTED]->(c:Comment)-[:ON]->(p)
             
-            WITH p, author.username AS username, r,
+            WITH p, author.username AS username, r, f,
                  count(DISTINCT l) AS likes,
                  collect(CASE WHEN c IS NOT NULL THEN {
                      id: c.id,
@@ -65,6 +67,7 @@ async def get_posts_excluding_user(user_id: str) -> list[dict]:
             p,
             username,
             r IS NOT NULL AS is_liked,
+            f IS NOT NULL AS is_followed,
             likes,
             [x IN comments WHERE x IS NOT NULL] AS comments
             ORDER BY p.created_at DESC
@@ -77,7 +80,7 @@ async def get_posts_excluding_user(user_id: str) -> list[dict]:
             p_node = record["p"]
             post_data = dict(p_node.items())
 
-            comments = record["comments"] if record["comments"] is not None else []
+            comments = [c for c in record["comments"] if c is not None]
 
             posts.append({
                 "id": post_data["id"],
@@ -86,6 +89,7 @@ async def get_posts_excluding_user(user_id: str) -> list[dict]:
                 "date": post_data["created_at"],
                 "username": record["username"],
                 "is_liked": record["is_liked"],
+                "is_followed": record["is_followed"],
                 "comments": comments
             })
 
@@ -120,6 +124,7 @@ async def get_posts_by_ids(post_ids: list[str]) -> list[dict]:
                 "date": post_data["created_at"],
                 "username": u_node["username"],
                 "is_liked": False,
+                "is_followed": False,
                 "comments": []
             })
         return posts

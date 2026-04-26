@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from contextlib import asynccontextmanager
 from db.neo4j import neo4j_driver as neo4j
-from routers import auth, posts
+from routers import auth, posts, users
 from fastapi.middleware.cors import CORSMiddleware
 
 @asynccontextmanager
@@ -25,4 +25,5 @@ app.add_middleware(
 
 app.include_router(auth.router, prefix="/auth", tags=["auth"])
 app.include_router(posts.router, prefix="/posts", tags=["posts"])
+app.include_router(users.router, prefix="/users", tags=["users"])
 

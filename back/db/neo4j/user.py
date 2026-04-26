@@ -42,3 +42,19 @@ async def get_user_by_username(username: str) -> dict | None:
         )
         record = await result.single()
         return dict(record["u"].items()) if record else None
+
+async def follow_user(follower_id: str, followed_id: str) -> None:
+    async with driver.session() as session:
+        query = """
+        MATCH (follower:User {id: $follower_id}), (followed:User {id: $followed_id})
+        MERGE (followed)-[:FOLLOWS]->(follower)
+        """
+        await session.run(query, follower_id=follower_id, followed_id=followed_id)
+
+async def unfollow_user(follower_id: str, followed_id: str) -> None:
+    async with driver.session() as session:
+        query = """
+        MATCH (follower:User {id: $follower_id})-[r:FOLLOWS]->(followed:User {id: $followed_id})
+        DELETE r
+        """
+        await session.run(query, follower_id=follower_id, followed_id=followed_id)

@@ -15,4 +15,5 @@ class Post(BaseModel):
     date: str
     username: str
     is_liked: bool
+    is_followed: bool
     comments: List[Comment] = []
